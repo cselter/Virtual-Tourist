@@ -9,11 +9,17 @@
 /* Begin PBXBuildFile section */
 		9D24FF571B62EC5100E4C61B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF561B62EC5100E4C61B /* AppDelegate.swift */; };
 		9D24FF5A1B62EC5100E4C61B /* Virtual_Tourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF581B62EC5100E4C61B /* Virtual_Tourist.xcdatamodeld */; };
-		9D24FF5C1B62EC5100E4C61B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF5B1B62EC5100E4C61B /* ViewController.swift */; };
+		9D24FF5C1B62EC5100E4C61B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF5B1B62EC5100E4C61B /* MapViewController.swift */; };
 		9D24FF5F1B62EC5100E4C61B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D24FF5D1B62EC5100E4C61B /* Main.storyboard */; };
 		9D24FF611B62EC5100E4C61B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D24FF601B62EC5100E4C61B /* Images.xcassets */; };
 		9D24FF641B62EC5100E4C61B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D24FF621B62EC5100E4C61B /* LaunchScreen.xib */; };
 		9D24FF701B62EC5100E4C61B /* Virtual_TouristTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF6F1B62EC5100E4C61B /* Virtual_TouristTests.swift */; };
+		9D24FF7A1B63E6FE00E4C61B /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF791B63E6FE00E4C61B /* PhotoAlbumViewController.swift */; };
+		9D24FF7C1B63F28100E4C61B /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF7B1B63F28100E4C61B /* CoreDataStackManager.swift */; };
+		9D24FF801B655F6A00E4C61B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF7F1B655F6A00E4C61B /* Pin.swift */; };
+		9D24FF831B6563DC00E4C61B /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF821B6563DC00E4C61B /* FlickrClient.swift */; };
+		9D24FF851B65668900E4C61B /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF841B65668900E4C61B /* Photo.swift */; };
+		9D24FF871B6566D100E4C61B /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24FF861B6566D100E4C61B /* Network.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,13 +37,19 @@
 		9D24FF551B62EC5100E4C61B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D24FF561B62EC5100E4C61B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D24FF591B62EC5100E4C61B /* Virtual_Tourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Virtual_Tourist.xcdatamodel; sourceTree = "<group>"; };
-		9D24FF5B1B62EC5100E4C61B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9D24FF5B1B62EC5100E4C61B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9D24FF5E1B62EC5100E4C61B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9D24FF601B62EC5100E4C61B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9D24FF631B62EC5100E4C61B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		9D24FF691B62EC5100E4C61B /* Virtual TouristTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Virtual TouristTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D24FF6E1B62EC5100E4C61B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D24FF6F1B62EC5100E4C61B /* Virtual_TouristTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Virtual_TouristTests.swift; sourceTree = "<group>"; };
+		9D24FF791B63E6FE00E4C61B /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
+		9D24FF7B1B63F28100E4C61B /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
+		9D24FF7F1B655F6A00E4C61B /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		9D24FF821B6563DC00E4C61B /* FlickrClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrClient.swift; sourceTree = "<group>"; };
+		9D24FF841B65668900E4C61B /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		9D24FF861B6566D100E4C61B /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,12 +91,14 @@
 		9D24FF531B62EC5100E4C61B /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
-				9D24FF561B62EC5100E4C61B /* AppDelegate.swift */,
-				9D24FF5B1B62EC5100E4C61B /* ViewController.swift */,
 				9D24FF5D1B62EC5100E4C61B /* Main.storyboard */,
+				9D24FF561B62EC5100E4C61B /* AppDelegate.swift */,
+				9D24FF5B1B62EC5100E4C61B /* MapViewController.swift */,
+				9D24FF791B63E6FE00E4C61B /* PhotoAlbumViewController.swift */,
+				9D24FF861B6566D100E4C61B /* Network.swift */,
+				9D24FF811B65615100E4C61B /* Model */,
 				9D24FF601B62EC5100E4C61B /* Images.xcassets */,
 				9D24FF621B62EC5100E4C61B /* LaunchScreen.xib */,
-				9D24FF581B62EC5100E4C61B /* Virtual_Tourist.xcdatamodeld */,
 				9D24FF541B62EC5100E4C61B /* Supporting Files */,
 			);
 			path = "Virtual Tourist";
@@ -113,6 +127,18 @@
 				9D24FF6E1B62EC5100E4C61B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9D24FF811B65615100E4C61B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9D24FF7F1B655F6A00E4C61B /* Pin.swift */,
+				9D24FF841B65668900E4C61B /* Photo.swift */,
+				9D24FF821B6563DC00E4C61B /* FlickrClient.swift */,
+				9D24FF581B62EC5100E4C61B /* Virtual_Tourist.xcdatamodeld */,
+				9D24FF7B1B63F28100E4C61B /* CoreDataStackManager.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +190,7 @@
 				TargetAttributes = {
 					9D24FF501B62EC5000E4C61B = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = D64MTQ8478;
 					};
 					9D24FF681B62EC5100E4C61B = {
 						CreatedOnToolsVersion = 6.4;
@@ -215,8 +242,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D24FF5C1B62EC5100E4C61B /* ViewController.swift in Sources */,
+				9D24FF851B65668900E4C61B /* Photo.swift in Sources */,
+				9D24FF5C1B62EC5100E4C61B /* MapViewController.swift in Sources */,
+				9D24FF7A1B63E6FE00E4C61B /* PhotoAlbumViewController.swift in Sources */,
+				9D24FF831B6563DC00E4C61B /* FlickrClient.swift in Sources */,
 				9D24FF5A1B62EC5100E4C61B /* Virtual_Tourist.xcdatamodeld in Sources */,
+				9D24FF871B6566D100E4C61B /* Network.swift in Sources */,
+				9D24FF801B655F6A00E4C61B /* Pin.swift in Sources */,
+				9D24FF7C1B63F28100E4C61B /* CoreDataStackManager.swift in Sources */,
 				9D24FF571B62EC5100E4C61B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,6 +377,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Virtual Tourist/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -354,6 +388,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Virtual Tourist/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -413,6 +448,7 @@
 				9D24FF751B62EC5100E4C61B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9D24FF761B62EC5100E4C61B /* Build configuration list for PBXNativeTarget "Virtual TouristTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +457,7 @@
 				9D24FF781B62EC5100E4C61B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
