@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="oRM-Iz-TTQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="oRM-Iz-TTQ">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
@@ -18,8 +18,10 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Z8x-7l-Tx2">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
                             </mapView>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Z8x-7l-Tx2" firstAttribute="bottom" secondItem="2fi-mo-0CV" secondAttribute="top" id="0Fa-iJ-AGZ"/>
@@ -52,7 +54,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KNR-2u-jFb">
-                                <rect key="frame" x="0.0" y="145" width="600" height="455"/>
+                                <rect key="frame" x="0.0" y="182" width="600" height="374"/>
+                                <animations/>
                                 <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="n0O-RK-dqA">
                                     <size key="itemSize" width="50" height="50"/>
@@ -67,25 +70,43 @@
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <animations/>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="940-iF-L3W">
-                                <rect key="frame" x="0.0" y="20" width="600" height="126"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="163"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="163" id="vkk-wg-Mh5"/>
+                                </constraints>
                             </mapView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fop-Kp-XlL">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <animations/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Nge-Q6-mFB"/>
+                                    <barButtonItem title="New Collection" id="wAR-qN-vXS"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="aMR-HY-V3K"/>
+                                </items>
+                            </toolbar>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="KNR-2u-jFb" firstAttribute="trailing" secondItem="940-iF-L3W" secondAttribute="trailing" id="4ap-bb-649"/>
-                            <constraint firstItem="KNR-2u-jFb" firstAttribute="leading" secondItem="O65-Jq-R6W" secondAttribute="leading" id="GUl-Mb-Giv"/>
-                            <constraint firstItem="KNR-2u-jFb" firstAttribute="leading" secondItem="940-iF-L3W" secondAttribute="leading" id="Zrf-28-hQX"/>
-                            <constraint firstItem="KNR-2u-jFb" firstAttribute="top" secondItem="usz-pI-UTO" secondAttribute="bottom" constant="81" id="eRW-J6-Qgy"/>
-                            <constraint firstItem="Prw-yN-46F" firstAttribute="top" secondItem="940-iF-L3W" secondAttribute="bottom" constant="454" id="iKB-TJ-QO7"/>
-                            <constraint firstAttribute="trailing" secondItem="KNR-2u-jFb" secondAttribute="trailing" id="nkj-2G-spi"/>
-                            <constraint firstItem="940-iF-L3W" firstAttribute="top" secondItem="O65-Jq-R6W" secondAttribute="top" constant="20" symbolic="YES" id="xor-pv-qPg"/>
-                            <constraint firstItem="KNR-2u-jFb" firstAttribute="bottom" secondItem="Prw-yN-46F" secondAttribute="top" id="zI1-9n-0nB"/>
+                            <constraint firstItem="fop-Kp-XlL" firstAttribute="bottom" secondItem="Prw-yN-46F" secondAttribute="top" id="6UO-HB-xPb"/>
+                            <constraint firstItem="KNR-2u-jFb" firstAttribute="trailing" secondItem="fop-Kp-XlL" secondAttribute="trailing" id="HWF-xD-34j"/>
+                            <constraint firstItem="940-iF-L3W" firstAttribute="leading" secondItem="KNR-2u-jFb" secondAttribute="leading" id="Jic-0e-R2F"/>
+                            <constraint firstItem="fop-Kp-XlL" firstAttribute="top" secondItem="KNR-2u-jFb" secondAttribute="bottom" id="LDW-ht-Loa"/>
+                            <constraint firstItem="KNR-2u-jFb" firstAttribute="top" secondItem="usz-pI-UTO" secondAttribute="bottom" constant="118" id="LTQ-67-GTB"/>
+                            <constraint firstItem="KNR-2u-jFb" firstAttribute="leading" secondItem="fop-Kp-XlL" secondAttribute="leading" id="Yoj-GK-cAK"/>
+                            <constraint firstItem="940-iF-L3W" firstAttribute="trailing" secondItem="KNR-2u-jFb" secondAttribute="trailing" id="dPj-Nt-W0P"/>
+                            <constraint firstItem="940-iF-L3W" firstAttribute="top" secondItem="O65-Jq-R6W" secondAttribute="top" constant="20" symbolic="YES" id="rCQ-dV-LCO"/>
+                            <constraint firstItem="KNR-2u-jFb" firstAttribute="leading" secondItem="O65-Jq-R6W" secondAttribute="leading" id="rRV-j6-XN9"/>
+                            <constraint firstAttribute="trailing" secondItem="fop-Kp-XlL" secondAttribute="trailing" id="uWG-dC-lcy"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5YQ-hE-jI9">
@@ -108,6 +129,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="dNs-a1-NoU">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
