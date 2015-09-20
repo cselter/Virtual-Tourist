@@ -34,7 +34,8 @@ class FlickrClient : NSObject {
           super.init()
      }
      
-     func searchLatLong(pin: Pin) {
+     func searchLatLong(pin: Pin, completionHandler: (success: Bool, result: AnyObject?, error: NSError?) -> Void) {
+          
           pinLat = pin.lat
           pinLong = pin.long
           var pageNum = 1
@@ -49,12 +50,35 @@ class FlickrClient : NSObject {
                     "nojsoncallback": "1",
                     "page": "\(pageNum)"
                ]
-               
-               getImageFromFlickrBySearch(keyValuePairs)
+          
+          /* Create the NSURLRequest using properly escaped URL */
+          let urlString = FLICKR_BASE_URL + escapedParameters(keyValuePairs)
+          let url = NSURL(string: urlString)!
+          let request = NSURLRequest(URL: url)
+
+          /* Create NSURLSessionDataTask and completion handler */
+          let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+               if let error = downloadError {
+                    println("Could not complete the request \(error)")
+               } else {
+                    var parsingError: NSError? = nil
+                    let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+                    
+                    // store the parsed photos into a dictionary & return if successful
+                    if let photosDictionary = parsedResult.valueForKey("photos") as? NSDictionary {
+                         completionHandler(success: true, result: photosDictionary, error: nil)
+                    } else {
+                         println("Can't find key 'photos' in \(parsedResult)")
+                         completionHandler(success: false, result: nil, error: downloadError)
+                    }
+               }
+          }
+
+          /* Resume (execute) the task */
+          task.resume()
      }
      
      func createBoundingBoxString() -> String {
-      
           let latitude = pinLat
           let longitude = pinLong
           
@@ -66,69 +90,6 @@ class FlickrClient : NSObject {
           
           return "\(bottom_left_lon),\(bottom_left_lat),\(top_right_lon),\(top_right_lat)"
      }
-     
-     
-     func getImageFromFlickrBySearch(methodArguments: [String : AnyObject]) {
-          
-          /* 3 - Get the shared NSURLSession to faciliate network activity */
-          //let session = NSURLSession.sharedSession()
-          
-          /* 4 - Create the NSURLRequest using properly escaped URL */
-          let urlString = FLICKR_BASE_URL + escapedParameters(methodArguments)
-          let url = NSURL(string: urlString)!
-          let request = NSURLRequest(URL: url)
-          
-          /* 5 - Create NSURLSessionDataTask and completion handler */
-          let task = session.dataTaskWithRequest(request) {data, response, downloadError in
-               if let error = downloadError {
-                    println("Could not complete the request \(error)")
-               } else {
-                    var parsingError: NSError? = nil
-                    let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
-                    
-                    // store the parsed photos into a dictionary
-                    if let photosDictionary = parsedResult.valueForKey("photos") as? NSDictionary {
-                         
-                         if let photoArray = photosDictionary.valueForKey("photo") as? [[String: AnyObject]] {
-                              
-                              // grab a random image index
-                              let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
-                              
-                              let photoDictionary = photoArray[randomPhotoIndex] as [String: AnyObject]
-                              
-                              // get the url and title from dictionary
-                              
-                              let photoTitle = photoDictionary["title"] as? String
-                              let imageURLstring = photoDictionary["url_m"] as? String
-                              let imageURL = NSURL(string: imageURLstring!)
-                              
-                              // if image exists, set the image and title
-                              
-                              /*
-                              if let imageData = NSData(contentsOfURL: imageURL!) {
-                                   dispatch_async(dispatch_get_main_queue(), {
-                                        self.flickImage.image = UIImage(data: imageData)
-                                        self.imageTitle.text = photoTitle
-                                   })
-                              } else {
-                                   println("Image does not exist at \(imageURL)")
-                              }
-                              */
-                              
-                         } else {
-                              println("Cannot find key 'photo' in \(photosDictionary)")
-                         }
-                         
-                    } else {
-                         println("Can't find key 'photos' in \(parsedResult)")
-                    }
-               }
-          }
-          
-          /* 6 - Resume (execute) the task */
-          task.resume()
-     }
-     
      
      func escapedParameters(parameters: [String : AnyObject]) -> String {
           
@@ -149,7 +110,6 @@ class FlickrClient : NSObject {
           
           return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
      }
-
      
      class func sharedInstance() -> FlickrClient {
           struct Singleton {
