@@ -14,10 +14,14 @@ import UIKit
 
 class Photo: NSManagedObject {
      
-     
+     struct properties {
+          static let URL = "url_m"
+          static let TITLE = "title"
+     }
      
      @NSManaged var photoImage: UIImage?
      @NSManaged var photoPath: String?
+     @NSManaged var photoTitle: String?
      @NSManaged var pin: Pin?
      
      
@@ -25,17 +29,26 @@ class Photo: NSManagedObject {
           super.init(entity: entity, insertIntoManagedObjectContext: context)
      }
      
-     
-     init(photoPath: String, pin: Pin, context: NSManagedObjectContext) {
+     init(dictionary: [String:AnyObject], context: NSManagedObjectContext) {
           let entity = NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
           super.init(entity: entity, insertIntoManagedObjectContext: context)
           
 
-          self.photoPath = photoPath
-          self.pin  = pin
+          self.photoPath = dictionary[properties.URL] as? String
+          self.photoTitle = dictionary[properties.TITLE] as? String
      }
      
-     // var photoImage
+     var docDirectoryImage: UIImage? {
+          get {
+               return FlickrClient.FileAccessory.photoAccessor.photoWithID(photoPath)
+          }
+          set {
+               FlickrClient.FileAccessory.photoAccessor.savePhoto(newValue, withID: photoPath!)
+          }
+     }
      
+     override func prepareForDeletion() {
+          FlickrClient.FileAccessory.photoAccessor.deletePhoto(self.photoPath!)
+     }
      
 }

@@ -54,25 +54,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KNR-2u-jFb">
-                                <rect key="frame" x="0.0" y="182" width="600" height="374"/>
+                                <rect key="frame" x="0.0" y="120" width="600" height="436"/>
                                 <animations/>
-                                <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="n0O-RK-dqA">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="110" height="110"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="K9s-WM-oRK" customClass="PhotoCellVC" customModule="Virtual_Tourist" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="l9s-LQ-2eD" customClass="PhotoCellVC" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ezO-1o-3ht">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VirtualTourist_120" translatesAutoresizingMaskIntoConstraints="NO" id="dBj-FG-Csl">
+                                                    <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                                     <animations/>
                                                 </imageView>
                                             </subviews>
@@ -81,16 +81,20 @@
                                         </view>
                                         <animations/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="ezO-1o-3ht" secondAttribute="trailing" id="GBD-Cc-5f0"/>
-                                            <constraint firstItem="ezO-1o-3ht" firstAttribute="leading" secondItem="K9s-WM-oRK" secondAttribute="leading" id="aaz-IE-Dc3"/>
-                                            <constraint firstItem="ezO-1o-3ht" firstAttribute="top" secondItem="K9s-WM-oRK" secondAttribute="top" id="gMl-8M-s2y"/>
-                                            <constraint firstAttribute="bottom" secondItem="ezO-1o-3ht" secondAttribute="bottom" id="uxC-7F-Xlr"/>
+                                            <constraint firstAttribute="trailing" secondItem="dBj-FG-Csl" secondAttribute="trailing" id="A3D-uo-QwL"/>
+                                            <constraint firstItem="dBj-FG-Csl" firstAttribute="top" secondItem="l9s-LQ-2eD" secondAttribute="top" id="I4G-2O-1nk"/>
+                                            <constraint firstAttribute="bottom" secondItem="dBj-FG-Csl" secondAttribute="bottom" id="O56-Nb-wEd"/>
+                                            <constraint firstItem="dBj-FG-Csl" firstAttribute="leading" secondItem="l9s-LQ-2eD" secondAttribute="leading" id="xhH-YK-KPW"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="cellImageView" destination="ezO-1o-3ht" id="BWd-lv-4JM"/>
+                                            <outlet property="cellImageView" destination="dBj-FG-Csl" id="FgD-PM-D09"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="NVB-Co-f7u" id="Bh2-bC-DCi"/>
+                                    <outlet property="delegate" destination="NVB-Co-f7u" id="DSi-xf-78m"/>
+                                </connections>
                             </collectionView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="940-iF-L3W">
                                 <rect key="frame" x="0.0" y="20" width="600" height="163"/>
@@ -104,33 +108,50 @@
                                 <animations/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Nge-Q6-mFB"/>
-                                    <barButtonItem title="New Collection" id="wAR-qN-vXS"/>
+                                    <barButtonItem title="New Collection" id="wAR-qN-vXS">
+                                        <connections>
+                                            <action selector="newCollectionButtonPressed:" destination="NVB-Co-f7u" id="Yr0-ct-hFs"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="aMR-HY-V3K"/>
                                 </items>
                             </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Photos To Pin" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dW2-Tv-D50">
+                                <rect key="frame" x="0.0" y="82" width="600" height="436"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="dW2-Tv-D50" firstAttribute="centerY" secondItem="O65-Jq-R6W" secondAttribute="centerY" id="4Og-Ca-hgU"/>
                             <constraint firstItem="fop-Kp-XlL" firstAttribute="bottom" secondItem="Prw-yN-46F" secondAttribute="top" id="6UO-HB-xPb"/>
+                            <constraint firstItem="dW2-Tv-D50" firstAttribute="leading" secondItem="KNR-2u-jFb" secondAttribute="leading" id="H4X-SM-Xow"/>
                             <constraint firstItem="KNR-2u-jFb" firstAttribute="trailing" secondItem="fop-Kp-XlL" secondAttribute="trailing" id="HWF-xD-34j"/>
+                            <constraint firstItem="dW2-Tv-D50" firstAttribute="top" secondItem="usz-pI-UTO" secondAttribute="bottom" constant="18" id="JI5-GU-h4m"/>
                             <constraint firstItem="940-iF-L3W" firstAttribute="leading" secondItem="KNR-2u-jFb" secondAttribute="leading" id="Jic-0e-R2F"/>
                             <constraint firstItem="fop-Kp-XlL" firstAttribute="top" secondItem="KNR-2u-jFb" secondAttribute="bottom" id="LDW-ht-Loa"/>
-                            <constraint firstItem="KNR-2u-jFb" firstAttribute="top" secondItem="usz-pI-UTO" secondAttribute="bottom" constant="118" id="LTQ-67-GTB"/>
+                            <constraint firstItem="KNR-2u-jFb" firstAttribute="top" secondItem="usz-pI-UTO" secondAttribute="bottom" constant="56" id="LTQ-67-GTB"/>
                             <constraint firstItem="KNR-2u-jFb" firstAttribute="leading" secondItem="fop-Kp-XlL" secondAttribute="leading" id="Yoj-GK-cAK"/>
                             <constraint firstItem="940-iF-L3W" firstAttribute="trailing" secondItem="KNR-2u-jFb" secondAttribute="trailing" id="dPj-Nt-W0P"/>
                             <constraint firstItem="940-iF-L3W" firstAttribute="top" secondItem="O65-Jq-R6W" secondAttribute="top" constant="20" symbolic="YES" id="rCQ-dV-LCO"/>
                             <constraint firstItem="KNR-2u-jFb" firstAttribute="leading" secondItem="O65-Jq-R6W" secondAttribute="leading" id="rRV-j6-XN9"/>
                             <constraint firstAttribute="trailing" secondItem="fop-Kp-XlL" secondAttribute="trailing" id="uWG-dC-lcy"/>
+                            <constraint firstItem="dW2-Tv-D50" firstAttribute="trailing" secondItem="KNR-2u-jFb" secondAttribute="trailing" id="zf6-BE-LMb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5YQ-hE-jI9">
+                        <nil key="title"/>
                         <barButtonItem key="backBarButtonItem" title="Back" id="2Pm-uJ-SRe"/>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="940-iF-L3W" id="9aF-yc-Ib0"/>
                         <outlet property="navBar" destination="5YQ-hE-jI9" id="DuV-9t-d1F"/>
                         <outlet property="newCollectionButton" destination="wAR-qN-vXS" id="I6o-dH-du1"/>
+                        <outlet property="noPhotosLabel" destination="dW2-Tv-D50" id="OHa-vs-gPv"/>
                         <outlet property="photoCollectionView" destination="KNR-2u-jFb" id="Sid-Rv-ZMw"/>
                     </connections>
                 </viewController>
@@ -158,4 +179,7 @@
             <point key="canvasLocation" x="-46" y="439"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="VirtualTourist_120" width="120" height="120"/>
+    </resources>
 </document>
