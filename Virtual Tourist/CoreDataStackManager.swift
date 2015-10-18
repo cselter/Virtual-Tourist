@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 /**
 * The CoreDataStackManager contains the code that was previously living in the

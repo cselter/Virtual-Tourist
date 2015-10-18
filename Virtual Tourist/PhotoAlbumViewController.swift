@@ -91,13 +91,22 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                          if let photosDictionary = result as? [[String: AnyObject]] {
                               countOfPhotos = photosDictionary.count
                               println("countOfPhotos: \(countOfPhotos)")
+                              
+                              dispatch_async(dispatch_get_main_queue(), { () -> Void in
                               var photos = photosDictionary.map() {
                                    (dictionary: [String: AnyObject]) -> Photo in
-                                   let photo = Photo(dictionary: dictionary, context: self.sharedContext)
-                                   photo.pin = self.pin
+                                   println("before let photo")
                                    
+                                 
+                                   
+                                   let photo = Photo(dictionary: dictionary, context: self.sharedContext)
+                                 
+                                   
+                                   photo.pin = self.pin
                                    return photo
                               }
+                                   })
+                              
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                    if countOfPhotos > 0 {
                                         self.noPhotosLabel.alpha = 0
@@ -119,7 +128,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                               }
                          }
                          println("***********calling saveContext()...")
-                         self.saveIt()
+                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                   self.saveIt()
+                              })
                          self.newCollectionButton.enabled = true
                     }
                })
@@ -174,11 +185,20 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
           let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCellVC
           let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
           photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
-          if photo.photoPath == nil || photo.photoPath == "" {
-               // use 'blank photo', if nil/empty
-               photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
+          prepPhotoCell(photoCell, photo: photo)
+          return photoCell
+     }
+     
+     // *****************************************
+     // * prepPhotoCell: Abstracted cell config *
+     // *****************************************
+     func prepPhotoCell(photoCell: PhotoCellVC, photo: Photo) {
+          var photoImage = UIImage(named: "VirtualTourist_120")
+          photoCell.cellImageView.image = nil
+          
+          if photo.photoPath == nil || photo.photoPath == "" {   // use 'blank photo', if nil/empty
                println("photoPath is nil or empty")
-               photoCell.cellImageView.backgroundColor = UIColor.redColor()
+               photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
           } else {
                let task = FlickrClient.sharedInstance().getFlickrImageData(photo.photoPath!) {
                     (imageData, error) -> Void in
@@ -189,17 +209,24 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                          })
                     } else {
                          if let data = imageData {
-                              let photo = UIImage(data: data)
-                              println("prepPhotoCell")
+                              let image = UIImage(data: data)
+                              
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                   photoCell.cellImageView.image = photo
+                                   photo.docDirectoryImage = image
                               })
+                              
+                              dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                   //photo.docDirectoryImage = photoImage
+                                   photoCell.cellImageView.image = image
+                              })
+                              self.newCollectionButton.enabled = true
                          }
                     }
                }
           }
-          return photoCell
+          photoCell.cellImageView.image = photoImage!
      }
+     
      
      // ****************************************************
      // * Refreshes the collection if any changes are made *
