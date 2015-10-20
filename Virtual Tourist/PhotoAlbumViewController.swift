@@ -25,7 +25,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      
      override func viewWillAppear(animated: Bool) {
           self.navigationController?.navigationBarHidden = false
-          println("viewDidAppear")
+          print("viewDidAppear")
           self.newCollectionButton.enabled = false
           
           self.noPhotosLabel.textAlignment = NSTextAlignment.Center
@@ -34,16 +34,19 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
 
      override func viewDidLoad() {
           super.viewDidLoad()
-          println("viewDidLoad")
+          print("viewDidLoad")
           let pinLocation = CLLocationCoordinate2D(latitude: self.pin.lat, longitude: self.pin.long)
           let pin = MKPointAnnotation()
           pin.coordinate = pinLocation
           pin.title = self.pin.title
           self.pinAnnotation = pin
-          var currPin = [MKPointAnnotation]()
+          // var currPin = [MKPointAnnotation]()
           self.mapView.showAnnotations([pin], animated: true)
           
-          fetchedResultsController.performFetch(nil)
+          do {
+              try fetchedResultsController.performFetch()
+          } catch _ {
+          }
           
           fetchedResultsController.delegate = self
           self.photoCollectionView.delegate = self
@@ -51,7 +54,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
           
           if self.pin.photos.isEmpty {
                getPhotos()
-               println("getPhotos() called")
+               print("getPhotos() called")
           } else {
                self.newCollectionButton.enabled = true
           }
@@ -83,19 +86,19 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                self.client.searchLatLong(self.pin!, completionHandler: { (success, result, error) -> Void in
                     
                     if let error = error {
-                         println("Error getting photos: \(error)")
+                         print("Error getting photos: \(error)")
                     } else {
                          // No error, got dictionary of photos
                          // Save as Photo objects and save to Pin
                          //println(result)
                          if let photosDictionary = result as? [[String: AnyObject]] {
                               countOfPhotos = photosDictionary.count
-                              println("countOfPhotos: \(countOfPhotos)")
+                              print("countOfPhotos: \(countOfPhotos)")
                               
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
                               var photos = photosDictionary.map() {
                                    (dictionary: [String: AnyObject]) -> Photo in
-                                   println("before let photo")
+                                   print("before let photo")
                                    
                                  
                                    
@@ -119,7 +122,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                               })
                               
                          } else {
-                              println("else, error")
+                              print("else, error")
                               if let error = result as? String {
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                    // TODO: Update ERROR Popup
@@ -127,7 +130,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                               })
                               }
                          }
-                         println("***********calling saveContext()...")
+                         print("***********calling saveContext()...")
                          dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                    self.saveIt()
                               })
@@ -147,10 +150,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * collectionView: didSelectItemAtIndexPath *
      // ********************************************
      func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-          println("didSelectItemAtIndexPath")
+          print("didSelectItemAtIndexPath")
           let photoCell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotoCellVC
           
-          if let index = find(selectedPhotoPaths, indexPath) {
+          if let index = selectedPhotoPaths.indexOf(indexPath) {
                selectedPhotoPaths.removeAtIndex(index)
           } else {
                selectedPhotoPaths.append(indexPath)
@@ -163,9 +166,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * collectionView: numberOfItemsInSection *
      // ******************************************
      func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-          let sectionData = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+          let sectionData = self.fetchedResultsController.sections![section] 
           
-          println("numberOfItemsInSection: \(sectionData.numberOfObjects)")
+          print("numberOfItemsInSection: \(sectionData.numberOfObjects)")
           return sectionData.numberOfObjects
      }
 
@@ -173,7 +176,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * return number of sections in CollectionView *
      // ***********************************************
      func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-          println("numberOfSectionsInCollectionView: \(self.fetchedResultsController.sections?.count)")
+          print("numberOfSectionsInCollectionView: \(self.fetchedResultsController.sections?.count)")
           return self.fetchedResultsController.sections?.count ?? 0
      }
      
@@ -181,7 +184,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * collectionView: cellForItemAtIndexPath *
      // ******************************************
      func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-          println("cellForItemAtIndexPath")
+          print("cellForItemAtIndexPath")
           let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCellVC
           let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
           photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
@@ -193,11 +196,11 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * prepPhotoCell: Abstracted cell config *
      // *****************************************
      func prepPhotoCell(photoCell: PhotoCellVC, photo: Photo) {
-          var photoImage = UIImage(named: "VirtualTourist_120")
+          let photoImage = UIImage(named: "VirtualTourist_120")
           photoCell.cellImageView.image = nil
           
           if photo.photoPath == nil || photo.photoPath == "" {   // use 'blank photo', if nil/empty
-               println("photoPath is nil or empty")
+               print("photoPath is nil or empty")
                photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
           } else {
                let task = FlickrClient.sharedInstance().getFlickrImageData(photo.photoPath!) {
@@ -205,7 +208,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     
                     if let error = error {
                          dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                              println("error: \(error)")
+                              print("error: \(error)")
                          })
                     } else {
                          if let data = imageData {
@@ -232,7 +235,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * Refreshes the collection if any changes are made *
      // ****************************************************
      func controllerWillChangeContent(controller: NSFetchedResultsController) {
-          println("calling reload data in controllerwillchangecontent")
+          print("calling reload data in controllerwillchangecontent")
           self.photoCollectionView.reloadData()
      }
      

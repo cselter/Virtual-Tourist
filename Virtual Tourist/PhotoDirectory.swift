@@ -20,17 +20,19 @@ class PhotoDirectory {
           }
           
           let path = pathOfID(identifier!)
-          var data: NSData?
           if let data = NSData(contentsOfFile: path) {
                return UIImage(data: data)
           }
           return nil
      }
      
+
+     
      // Creates a URL path from the name of the file
      func pathOfID(identifier: String) -> String {
-          let documentDirectoryURL = documentManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as! NSURL
+          let documentDirectoryURL = documentManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL!
           let url = documentDirectoryURL.URLByAppendingPathComponent(identifier.lastPathComponent)
+          
           
           return url.path!
      }
@@ -39,18 +41,36 @@ class PhotoDirectory {
      func savePhoto(image: UIImage?, withID identifier: String) {
           let path = pathOfID(identifier)
           if image == nil {
-               documentManager.removeItemAtPath(path, error: nil)
+              do {
+                  try documentManager.removeItemAtPath(path)
+              } catch _ {
+              }
                return
           }
           let data = UIImagePNGRepresentation(image!)
-          data.writeToFile(path, atomically: true)
+          data!.writeToFile(path, atomically: true)
      }
      
      // Deletes the image in the document directory 
      func deletePhoto(identifier: String) {
           var error: NSError?
           if documentManager.fileExistsAtPath(pathOfID(identifier)) {
-               documentManager.removeItemAtPath(pathOfID(identifier), error: &error)
+              do {
+                  try documentManager.removeItemAtPath(pathOfID(identifier))
+              } catch let error1 as NSError {
+                  error = error1
+              }
           }
      }
+}
+
+
+extension String {
+     var lastPathComponent: String {
+          
+          get {
+               return (self as NSString).lastPathComponent
+          }
+     }
+     
 }

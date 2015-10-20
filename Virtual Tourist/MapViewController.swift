@@ -25,12 +25,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
           
           self.mapView.delegate = self
           
-          var longPressRecogniser = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+          let longPressRecogniser = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
           
           longPressRecogniser.minimumPressDuration = 1.0
           mapView.addGestureRecognizer(longPressRecogniser)
           
-          fetchedResultsController.performFetch(nil)
+          do {
+              try fetchedResultsController.performFetch()
+          } catch _ {
+          }
           fetchedResultsController.delegate = self
      }
 
@@ -102,19 +105,32 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
           let geocoder = CLGeocoder()
           
           geocoder.reverseGeocodeLocation(loc, completionHandler: { (placemarks, error) -> Void in
-               let placeArray = placemarks as? [CLPlacemark]
+               
+               let placeArray = placemarks as [CLPlacemark]!
+               
+               //if let placeArray = placemarks?[0]{               // Swift 2.0 Update
+               //     let placemark = placeArray as? CLPlacemark   // Swift 2.0 Update
+               //}                                                 // Swift 2.0 Update
+               
+               
                
                // Place details
-               var placeMark: CLPlacemark!
-               placeMark = placeArray?[0]
+               //var placeMark: CLPlacemark!
+               //placeMark = placeArray?[0]
+               
+               let placeMark = placeArray.first as CLPlacemark!
                
                // Address dictionary
                // println(placeMark.addressDictionary)
+               //if let locationName = placeMark.valueForKey("Name") {  // Swift 2.0 Update
+               //     pinAnnotation.title = locationName as! String     // Swift 2.0 Update
+               //}                                                      // Swift 2.0 Update
                
-               if let locationName = placeMark.addressDictionary["Name"] as? NSString {
+               // Above code replaced this:
+               if let locationName = placeMark.addressDictionary?["Name"] as? NSString {
                     pinAnnotation.title = locationName as String
-                    
                }
+               
                // Add the new Pin to the MapView
                self.addNewPin(MKPlacemark(placemark: placeMark))
           })
@@ -148,8 +164,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
      // *****************************************
      // * Configure annotation view of the Pins *
      // *****************************************
-     func mapView(mapView: MKMapView!,
-          viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+     func mapView(mapView: MKMapView,
+          viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
                
                if annotation is MKUserLocation {
                     //return nil so map view draws "blue dot" for standard user location
@@ -163,7 +179,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
                     pinView!.canShowCallout = true
                     pinView!.animatesDrop = true
                     pinView!.pinColor = .Red
-                    pinView!.rightCalloutAccessoryView = UIButton.buttonWithType(.DetailDisclosure) as! UIButton
+                    pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
                }
                else {
                     pinView!.annotation = annotation
@@ -175,9 +191,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
      // ***************************************************
      // * Open Photo Album View when annotation is tapped *
      // ***************************************************
-     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
           
-          println("Tapped Annotation - Go to PhotoAlbumVC")
+          print("Tapped Annotation - Go to PhotoAlbumVC")
           // get the tapped Pin
           self.currentPin = mapView.selectedAnnotations.first as? MKPointAnnotation
           
@@ -200,8 +216,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
      // **************************
      // * When a user taps a pin *
      // **************************
-     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
-          println("Selected a Pin")
+     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+          print("Selected a Pin")
      }
      
      // **************************
@@ -210,10 +226,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
      func fetchAllPins() -> [Pin] {
           let error: NSErrorPointer = nil
           let fetchRequest = NSFetchRequest(entityName: "Pin")
-          let results = self.sharedContext.executeFetchRequest(fetchRequest, error: error)
+          let results: [AnyObject]?
+          do {
+              results = try self.sharedContext.executeFetchRequest(fetchRequest)
+          } catch let error1 as NSError {
+              error.memory = error1
+              results = nil
+          }
           
           if error != nil {
-               println("fetchAllPins() error: \(error)")
+               print("fetchAllPins() error: \(error)")
           }
           
           return results as! [Pin]
@@ -231,16 +253,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
 
           let latPredicate = NSPredicate(format: "lat == %@", pinLat)
           let longPredicate = NSPredicate(format: "long == %@", pinLong)
-          let latLongPredicate = NSCompoundPredicate.andPredicateWithSubpredicates([latPredicate, longPredicate])
+          // let latLongPredicate = NSCompoundPredicate.andPredicateWithSubpredicates([latPredicate, longPredicate])
+          
+          let latLongPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [latPredicate, longPredicate])      // Swift 2.0 Update
           
           fetchRequest.predicate = latLongPredicate
           fetchRequest.sortDescriptors = []
-          let pinsArray = self.sharedContext.executeFetchRequest(fetchRequest, error: error) as! [Pin]
+          let pinsArray = (try! self.sharedContext.executeFetchRequest(fetchRequest)) as! [Pin]
           if error != nil {
-               println("fetchSinglePin() error: \(error)")
+               print("fetchSinglePin() error: \(error)")
           }
 
-          let foundCDPin = self.sharedContext.executeFetchRequest(fetchRequest, error: error)?.first as! Pin
+          let foundCDPin = try! self.sharedContext.executeFetchRequest(fetchRequest).first as! Pin  // added try!
           
           if error != nil {
                return nil

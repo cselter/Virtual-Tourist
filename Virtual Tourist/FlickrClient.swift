@@ -69,10 +69,10 @@ class FlickrClient : NSObject {
           /* Create NSURLSessionDataTask and completion handler */
           let task = session.dataTaskWithRequest(request) {data, response, downloadError in
                if let error = downloadError {
-                    println("Could not complete the request \(error)")
+                    print("Could not complete the request \(error)")
                } else {
-                    var parsingError: NSError? = nil
-                    let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+                    // var parsingError: NSError? = nil
+                    let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as! NSDictionary
                     
                     // store the parsed photos into a dictionary & return if successful
                     if let photosDictionary = parsedResult.valueForKey("photos") as? NSDictionary {
@@ -82,7 +82,7 @@ class FlickrClient : NSObject {
                          completionHandler(success: true, result: photoDictionary, error: nil)
                          }
                     } else {
-                         println("Can't find key 'photos' in \(parsedResult)")
+                         print("Can't find key 'photos' in \(parsedResult)")
                          completionHandler(success: false, result: nil, error: downloadError)
                     }
                }
@@ -102,8 +102,8 @@ class FlickrClient : NSObject {
           let top_right_lon = min(longitude! + BOUNDING_BOX_HALF_HEIGHT, LON_MAX)
           let top_right_lat = min(latitude! + BOUNDING_BOX_HALF_HEIGHT, LAT_MAX)
           
-          println("\(latitude), \(longitude)")
-          println("\(bottom_left_lon),\(bottom_left_lat),\(top_right_lon),\(top_right_lat)")
+          print("\(latitude), \(longitude)")
+          print("\(bottom_left_lon),\(bottom_left_lat),\(top_right_lon),\(top_right_lat)")
           return "\(bottom_left_lon),\(bottom_left_lat),\(top_right_lon),\(top_right_lat)"
      }
      
@@ -124,7 +124,7 @@ class FlickrClient : NSObject {
                
           }
           
-          return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
+          return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
      }
      
      class func sharedInstance() -> FlickrClient {
@@ -137,13 +137,13 @@ class FlickrClient : NSObject {
      
      
      func getFlickrImageData(filePath: String, completionHandler: (imageData: NSData?, error: NSError?) -> Void) -> NSURLSessionTask {
-          let url = NSURL(string: filePath)
+          // let url = NSURL(string: filePath)
           
           let request = NSURLRequest(URL: NSURL(string: filePath)!)
           let task = session.dataTaskWithRequest(request) {
                (data, response, error) in
                if let error = error {
-                    println("getFlickrImageData error: \(error)")
+                    print("getFlickrImageData error: \(error)")
                } else {
                     completionHandler(imageData: data, error: nil)
                }
