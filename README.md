@@ -13,4 +13,4 @@ Project Objectives:
 * Create a user interface that intuitively communicates network activity and download progress
 
 ## Requirements
-* Xcode 6.4, Swift 1.2 (Swift 2.0 Updates Pending)
+* Xcode 7.0, Swift 2.0
