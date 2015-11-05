@@ -15,25 +15,24 @@ class PhotoDirectory {
      
      // Returns image
      func photoWithID(identifier: String?) -> UIImage? {
-          if identifier == nil || identifier != "" {
+          if identifier == nil || identifier == "" {
                return nil
           }
           
           let path = pathOfID(identifier!)
+ 
+          // return the saved image data
           if let data = NSData(contentsOfFile: path) {
                return UIImage(data: data)
           }
+          
           return nil
      }
-     
-
      
      // Creates a URL path from the name of the file
      func pathOfID(identifier: String) -> String {
           let documentDirectoryURL = documentManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL!
           let url = documentDirectoryURL.URLByAppendingPathComponent(identifier.lastPathComponent)
-          
-          
           return url.path!
      }
      
@@ -64,13 +63,10 @@ class PhotoDirectory {
      }
 }
 
-
 extension String {
      var lastPathComponent: String {
-          
           get {
                return (self as NSString).lastPathComponent
           }
      }
-     
 }

@@ -25,22 +25,17 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      
      override func viewWillAppear(animated: Bool) {
           self.navigationController?.navigationBarHidden = false
-          print("viewDidAppear")
-          self.newCollectionButton.enabled = false
-          
           self.noPhotosLabel.textAlignment = NSTextAlignment.Center
           self.noPhotosLabel.alpha = 0
      }
 
      override func viewDidLoad() {
           super.viewDidLoad()
-          print("viewDidLoad")
           let pinLocation = CLLocationCoordinate2D(latitude: self.pin.lat, longitude: self.pin.long)
           let pin = MKPointAnnotation()
           pin.coordinate = pinLocation
           pin.title = self.pin.title
           self.pinAnnotation = pin
-          // var currPin = [MKPointAnnotation]()
           self.mapView.showAnnotations([pin], animated: true)
           
           do {
@@ -54,7 +49,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
           
           if self.pin.photos.isEmpty {
                getPhotos()
-               print("getPhotos() called")
           } else {
                self.newCollectionButton.enabled = true
           }
@@ -84,38 +78,31 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
           // If this pin has no photos
           if self.pin.photos.isEmpty {
                self.client.searchLatLong(self.pin!, completionHandler: { (success, result, error) -> Void in
-                    
                     if let error = error {
                          print("Error getting photos: \(error)")
                     } else {
                          // No error, got dictionary of photos
                          // Save as Photo objects and save to Pin
-                         //println(result)
                          if let photosDictionary = result as? [[String: AnyObject]] {
                               countOfPhotos = photosDictionary.count
-                              print("countOfPhotos: \(countOfPhotos)")
+                              print("countOfPhotos: \(countOfPhotos)")     // used for debug
                               
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                              var photos = photosDictionary.map() {
-                                   (dictionary: [String: AnyObject]) -> Photo in
-                                   print("before let photo")
+                                   var photos = photosDictionary.map() {
+                                        (dictionary: [String: AnyObject]) -> Photo in
+                                        print("before let photo")
+                                        let photo = Photo(dictionary: dictionary, context: self.sharedContext)
+                                        photo.pin = self.pin
                                    
-                                 
-                                   
-                                   let photo = Photo(dictionary: dictionary, context: self.sharedContext)
-                                 
-                                   
-                                   photo.pin = self.pin
-                                   return photo
-                              }
-                                   })
+                                        return photo
+                                   }
+                              })
                               
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                    if countOfPhotos > 0 {
                                         self.noPhotosLabel.alpha = 0
                                         self.newCollectionButton.enabled = true
-                                        // println("calling reloadData()1...")
-                                        //self.photoCollectionView.reloadData()
+                                        self.photoCollectionView.reloadData()
                                    } else {
                                         //self.noPhotoLabel.hidden = false
                                    }
@@ -130,7 +117,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                               })
                               }
                          }
-                         print("***********calling saveContext()...")
+                         // Save context
                          dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                    self.saveIt()
                               })
@@ -150,7 +137,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * collectionView: didSelectItemAtIndexPath *
      // ********************************************
      func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-          print("didSelectItemAtIndexPath")
           let photoCell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotoCellVC
           
           if let index = selectedPhotoPaths.indexOf(indexPath) {
@@ -168,7 +154,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
           let sectionData = self.fetchedResultsController.sections![section] 
           
-          print("numberOfItemsInSection: \(sectionData.numberOfObjects)")
+          // print("numberOfItemsInSection: \(sectionData.numberOfObjects)") // used for debug
           return sectionData.numberOfObjects
      }
 
@@ -176,7 +162,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * return number of sections in CollectionView *
      // ***********************************************
      func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-          print("numberOfSectionsInCollectionView: \(self.fetchedResultsController.sections?.count)")
+          // print("numberOfSectionsInCollectionView: \(self.fetchedResultsController.sections?.count)") // used for debug
           return self.fetchedResultsController.sections?.count ?? 0
      }
      
@@ -184,28 +170,33 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
      // * collectionView: cellForItemAtIndexPath *
      // ******************************************
      func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-          print("cellForItemAtIndexPath")
           let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("photoCell", forIndexPath: indexPath) as! PhotoCellVC
           let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
           photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
-          prepPhotoCell(photoCell, photo: photo)
+          prepPhotoCell(photoCell, photo: photo, atIndex: indexPath)
           return photoCell
      }
      
      // *****************************************
      // * prepPhotoCell: Abstracted cell config *
      // *****************************************
-     func prepPhotoCell(photoCell: PhotoCellVC, photo: Photo) {
+     func prepPhotoCell(photoCell: PhotoCellVC, photo: Photo, atIndex: NSIndexPath) {
           let photoImage = UIImage(named: "VirtualTourist_120")
           photoCell.cellImageView.image = nil
           
-          if photo.photoPath == nil || photo.photoPath == "" {   // use 'blank photo', if nil/empty
+          // check for saved photo in documents directory
+          let docImage = FlickrClient.FileAccessory.photoAccessor.photoWithID(photo.photoPath!)
+          
+          // if no photo was ever downloaded, use 'blank photo'
+          if photo.photoPath == nil || photo.photoPath == "" {
                print("photoPath is nil or empty")
                photoCell.cellImageView.image = UIImage(named: "VirtualTourist_120")
+          } else if docImage != nil {   // if already have photo in doc directory, load that
+               photoCell.cellImageView.image = docImage
           } else {
+          // else re-download image
                let task = FlickrClient.sharedInstance().getFlickrImageData(photo.photoPath!) {
                     (imageData, error) -> Void in
-                    
                     if let error = error {
                          dispatch_async(dispatch_get_main_queue(), { () -> Void in
                               print("error: \(error)")
@@ -219,23 +210,19 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                               })
                               
                               dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                   //photo.docDirectoryImage = photoImage
                                    photoCell.cellImageView.image = image
                               })
-                              self.newCollectionButton.enabled = true
+                              
                          }
                     }
                }
           }
-          photoCell.cellImageView.image = photoImage!
      }
-     
      
      // ****************************************************
      // * Refreshes the collection if any changes are made *
      // ****************************************************
      func controllerWillChangeContent(controller: NSFetchedResultsController) {
-          print("calling reload data in controllerwillchangecontent")
           self.photoCollectionView.reloadData()
      }
      
