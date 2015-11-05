@@ -57,11 +57,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
           }
           self.navigationController?.navigationBarHidden = true
      }
-     
-     override func didReceiveMemoryWarning() {
-          super.didReceiveMemoryWarning()
-          // Dispose of any resources that can be recreated.
-     }
   
      // MARK: - Core Data Convenience. This will be useful for fetching. And for adding and saving objects as well.
      var sharedContext: NSManagedObjectContext {
@@ -108,25 +103,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
                
                let placeArray = placemarks as [CLPlacemark]!
                
-               //if let placeArray = placemarks?[0]{               // Swift 2.0 Update
-               //     let placemark = placeArray as? CLPlacemark   // Swift 2.0 Update
-               //}                                                 // Swift 2.0 Update
-               
-               
-               
-               // Place details
-               //var placeMark: CLPlacemark!
-               //placeMark = placeArray?[0]
-               
                let placeMark = placeArray.first as CLPlacemark!
-               
-               // Address dictionary
-               // println(placeMark.addressDictionary)
-               //if let locationName = placeMark.valueForKey("Name") {  // Swift 2.0 Update
-               //     pinAnnotation.title = locationName as! String     // Swift 2.0 Update
-               //}                                                      // Swift 2.0 Update
-               
-               // Above code replaced this:
+
                if let locationName = placeMark.addressDictionary?["Name"] as? NSString {
                     pinAnnotation.title = locationName as String
                }
@@ -253,7 +231,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsCo
 
           let latPredicate = NSPredicate(format: "lat == %@", pinLat)
           let longPredicate = NSPredicate(format: "long == %@", pinLong)
-          // let latLongPredicate = NSCompoundPredicate.andPredicateWithSubpredicates([latPredicate, longPredicate])
           
           let latLongPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [latPredicate, longPredicate])      // Swift 2.0 Update
           
